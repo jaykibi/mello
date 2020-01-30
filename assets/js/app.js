@@ -2,8 +2,19 @@ var $boardContainer = document.querySelector('.container');
 
 var board = new Board();
 
+function handleListCreate() {
+  var listTitle = prompt('new list title please') || '';
+
+  if (listTitle.trim()) {
+    board.addList(listTitle);
+    renderBoard();
+  }
+}
+
 
 function renderBoard() {
+  $boardContainer.innerHTML = '';
+
   board.lists.forEach(function(list) {
     var $listContainer = document.createElement('div');
     $listContainer.className = 'list';
@@ -23,6 +34,7 @@ function renderBoard() {
 
   var $addListButton = document.createElement('button');
   $addListButton.textContent = '+ 😂Add another list😂';
+  $addListButton.addEventListener('click', handleListCreate);
 
   $addListContainer.appendChild($addListButton);
   $boardContainer.appendChild($addListContainer);
