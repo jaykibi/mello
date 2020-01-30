@@ -11,6 +11,18 @@ function handleListCreate() {
   }
 }
 
+function handleCardCreate(event) {
+  var $listContainer = event.target.parentNode;
+  var listId = Number($listContainer.getAttribute('data-id'));
+
+  var cardText = prompt('new card text') || '';
+
+  if (cardText.trim()) {
+    board.addCard(listId, cardText);
+    renderBoard();
+  }
+}
+ 
 
 function renderBoard() {
   $boardContainer.innerHTML = '';
@@ -18,14 +30,34 @@ function renderBoard() {
   board.lists.forEach(function(list) {
     var $listContainer = document.createElement('div');
     $listContainer.className = 'list';
+    $listContainer.setAttribute('data-id', list.id);
 
     var $header = document.createElement('header');
 
     var $headerButton = document.createElement('button');
     $headerButton.textContent = list.title;
 
+    var $cardUl = document.createElement('ul');
+
+    list.cards.forEach(function(card) {
+      var $cardLi = document.createElement('li');
+
+      var $cardButton = document.createElement('button');
+
+      $cardButton.textContent = card.text;
+
+      $cardLi.appendChild($cardButton);
+      $cardUl.appendChild($cardLi);
+    })
+
+    var $addCardButton = document.createElement('button');
+    $addCardButton.textContent = 'Add a card...';
+    $addCardButton.addEventListener('click', handleCardCreate);
+
     $header.appendChild($headerButton);
     $listContainer.appendChild($header);
+    $listContainer.appendChild($cardUl);
+    $listContainer.appendChild($addCardButton);
     $boardContainer.appendChild($listContainer);
   });
 
@@ -33,7 +65,7 @@ function renderBoard() {
   $addListContainer.className = 'list add';
 
   var $addListButton = document.createElement('button');
-  $addListButton.textContent = '+ 😂Add another list😂';
+  $addListButton.textContent = '+ Add another list';
   $addListButton.addEventListener('click', handleListCreate);
 
   $addListContainer.appendChild($addListButton);
